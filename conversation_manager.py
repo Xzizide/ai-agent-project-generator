@@ -41,7 +41,9 @@ class ConversationManager:
 
         return active_agents[:3]  # Limit to 3 agents max per round
 
-    def run_conversation_round(self, initial_prompt, max_exchanges=3):
+    def run_conversation_round(
+        self, initial_prompt, max_exchanges=3, debug=False
+    ):
         """Run one round of conversation with relevant agents"""
 
         # Determine context from the prompt
@@ -63,8 +65,14 @@ class ConversationManager:
                 )
                 print(response)
 
+                # Debug action detection if requested
+                if debug and (
+                    agent.can_write_files or agent.can_generate_images
+                ):
+                    self.file_manager.debug_action_detection(response)
+
                 # Process any file operations
-                if agent.can_write_files:
+                if agent.can_write_files or agent.can_generate_images:
                     actions = self.file_manager.process_agent_response(
                         response
                     )
