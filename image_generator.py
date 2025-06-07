@@ -133,7 +133,7 @@ class ImageGenerator:
                     # Poll for completion
                     import time
 
-                    for _ in range(60):  # Wait up to 60 seconds
+                    for _ in range(180):  # Wait up to 180 seconds
                         time.sleep(1)
 
                         # Check if generation is complete

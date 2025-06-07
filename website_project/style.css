@@ -1,54 +1,100 @@
-/* Responsive Design */
-@media (max-width: 768px) {
-    .menu {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .menu li a {
-        font-size: 1rem;
-        padding: 10px;
-    }
+/* Reset and basic styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Additional Styles */
-#hero {
-    background-image: url('hero-bg.png');
-    height: 500px;
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+header {
+    background: linear-gradient(135deg, #ff6b6b, #f87d8a);
+    padding: 20px 40px;
+    text-align: center;
+}
+
+nav a {
+    margin: 0 15px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.hero {
+    background-image: url('hero_banner.png');
+    height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
     color: white;
-    padding: 100px 20px;
+    padding: 60px 20px;
 }
 
-.bg-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
-}
-
-.content-wrapper {
-    z-index: 2;
+.content {
     text-align: center;
 }
 
-.cake-image {
-    max-width: 300px;
-    margin: 0 auto 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+#about img {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 30px;
+}
+
+.gallery-grid img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#contact form {
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#contact input,
+#contact textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#contact button {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 footer {
-    background: #333;
-    color: #fff;
-    padding: 20px;
     text-align: center;
-    margin-top: 40px;
+    padding: 30px 20px;
+    background: #fff;
+    border-top: 1px solid #eee;
+}
+
+/* New styles for gallery images */
+.gallery-grid img {
+    transition: transform 0.3s ease;
+}
+
+.gallery-grid img:hover {
+    transform: scale(1.05);
 }

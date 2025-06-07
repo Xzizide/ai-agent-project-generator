@@ -9,12 +9,14 @@ class Agent:
         activation_triggers=None,
         can_write_files=False,
         can_generate_images=False,
+        model_name="qwen3:8b",
     ):
         self.name = name
         self.personality = personality
         self.activation_triggers = activation_triggers or []
         self.can_write_files = can_write_files
         self.can_generate_images = can_generate_images
+        self.model_name = model_name
         self.messages = [
             {
                 "role": "user",
@@ -88,7 +90,7 @@ Always be very descriptive in your prompts for better image generation."""
                     "Content-Type": "application/json",
                 },
                 json={
-                    "model": "qwen3:8b",
+                    "model": self.model_name,
                     "messages": self.messages
                     + [
                         {
