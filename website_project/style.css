@@ -1,100 +1,42 @@
-/* Reset and basic styles */
-* {
+/* Basic styling for the homepage */
+body {
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
+    background-color: #f4f4f4;
 }
 
 header {
-    background: linear-gradient(135deg, #ff6b6b, #f87d8a);
-    padding: 20px 40px;
+    background-color: #333;
+    color: white;
+    padding: 20px 0;
     text-align: center;
 }
 
 nav a {
+    color: white;
     margin: 0 15px;
-    color: white;
     text-decoration: none;
-    font-weight: bold;
 }
 
-.hero {
-    background-image: url('hero_banner.png');
-    height: 400px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    padding: 60px 20px;
+main {
+    padding: 40px 20px;
 }
 
-.content {
+#hero {
+    background-image: url('https://via.placeholder.com/1200x600');
+    height: 300px;
+    background-size: cover;
+    background-position: center;
     text-align: center;
-}
-
-#about img {
-    width: 100%;
-    max-width: 400px;
-    margin-bottom: 20px;
-}
-
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 30px;
-}
-
-.gallery-grid img {
-    width: 100%;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-#contact form {
-    max-width: 500px;
-    margin: 30px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-#contact input,
-#contact textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-#contact button {
-    background-color: #ff6b6b;
     color: white;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
+    padding: 50px 0;
 }
 
 footer {
+    background-color: #333;
+    color: white;
     text-align: center;
-    padding: 30px 20px;
-    background: #fff;
-    border-top: 1px solid #eee;
-}
-
-/* New styles for gallery images */
-.gallery-grid img {
-    transition: transform 0.3s ease;
-}
-
-.gallery-grid img:hover {
-    transform: scale(1.05);
+    padding: 20px 0;
+    margin-top: 40px;
 }

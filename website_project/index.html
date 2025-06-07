@@ -1,61 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Bakery Website</title>
-    <link rel="stylesheet" href="style.css">
-</head>
 <body>
-    <header>
-        <h1>Welcome to Our Bakery</h1>
-        <nav>
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#gallery">Gallery</a>
-            <a href="#contact">Contact</a>
-        </nav>
-    </header>
-
-    <section id="hero">
-        <img src="hero_banner.png" alt="Hero Banner">
-        <div class="content">
-            <h2>Cake & Treats for Every Occasion</h2>
-            <button onclick="toggleForm()">Order Now</button>
-        </div>
+  <header>
+    <h1>My Website</h1>
+  </header>
+  <main>
+    <section class="image">
+      <img src="images/hero.jpg" alt="Hero image" class="image">
     </section>
-
-    <section id="about">
-        <img src="about_us.jpg" alt="About Us">
-        <h2>About Us</h2>
-        <p>We are a family-owned bakery committed to crafting delicious cakes and treats with love.</p>
+    <section class="gallery">
+      <img src="images/thumbnail1.jpg" alt="Gallery thumbnail" class="gallery img">
+      <img src="images/album.jpg" alt="Album cover" class="gallery img">
     </section>
-
-    <section id="gallery">
-        <h2>Gallery</h2>
-        <div class="gallery-grid">
-            <img src="cake_1.png" alt="Cake 1">
-            <img src="cake_2.png" alt="Cake 2">
-            <img src="cake_3.png" alt="Cake 3">
-            <img src="cake_4.png" alt="Cake 4">
-            <img src="cake_5.png" alt="Cake 5">
-        </div>
-    </section>
-
-    <section id="contact">
-        <h2>Contact Us</h2>
-        <form id="orderForm">
-            <input type="text" placeholder="Your Name" required>
-            <input type="email" placeholder="Email Address" required>
-            <textarea rows="5" placeholder="Message"></textarea>
-            <button type="submit">Send Message</button>
-        </form>
-    </section>
-
-    <footer>
-        <p>&copy; 2023 Bakery Inc. All rights reserved.</p>
-        <img src="footer.png" alt="Footer Logo">
-    </footer>
-
-    <script src="script.js"></script>
+  </main>
+  <footer>
+    <p>&copy; 2023 My Website</p>
+  </footer>
 </body>
-</html>

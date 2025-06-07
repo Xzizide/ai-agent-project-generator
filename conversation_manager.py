@@ -24,20 +24,9 @@ class ConversationManager:
 
         # Always include manager if multiple agents are active (to facilitate)
         if (
-            len(active_agents) > 2 and self.agents[5] not in active_agents
+            len(active_agents) > 2 and self.agents[4] not in active_agents
         ):  # manager
-            active_agents.append(self.agents[5])
-
-        # Special conditions
-        if self.project_context["stuck_count"] > 2:
-            # Bring in rubber duck for problem solving
-            if self.agents[6] not in active_agents:  # rubber duck
-                active_agents.append(self.agents[6])
-
-        if self.project_context["satisfaction_level"] < 0.4:
-            # Crisis mode - bring in boss
-            if self.agents[1] not in active_agents:  # boss
-                active_agents.append(self.agents[1])
+            active_agents.append(self.agents[4])
 
         return active_agents[:3]  # Limit to 3 agents max per round
 
