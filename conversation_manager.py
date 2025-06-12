@@ -181,3 +181,9 @@ class ConversationManager:
         for file_path, size in structure.items():
             print(f"📄 {file_path} ({size} bytes)")
         print("=" * 23)
+
+    def reset_all_agents(self):
+        """Reset all agents' message history to initial system prompt"""
+        for agent in self.agents:
+            agent.reset_messages()
+        print("🔄 All agents reset to initial state")

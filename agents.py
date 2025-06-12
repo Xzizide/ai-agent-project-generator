@@ -1,4 +1,5 @@
 import requests
+import re
 
 
 class Agent:
@@ -24,20 +25,30 @@ class Agent:
             }
         ]
 
+    def _filter_thinking_sections(self, text):
+        """Remove thinking sections between <think> and </think> tags"""
+        # Use regex to remove everything between <think> and </think> tags (case insensitive)
+        filtered_text = re.sub(
+            r"<think>.*?</think>", "", text, flags=re.DOTALL | re.IGNORECASE
+        )
+        # Clean up any extra whitespace that might be left
+        filtered_text = re.sub(r"\n\s*\n\s*\n", "\n\n", filtered_text)
+        return filtered_text.strip()
+
     def get_file_instructions(self):
         instructions = ""
         if self.can_write_files:
             instructions += """When you need to create or modify files, use this format:
             
 FILE_ACTION: CREATE
-FILENAME: path/to/file.ext
+FILENAME: file.ext
 CONTENT:
 ```
 [file content here]
 ```
 
 FILE_ACTION: MODIFY
-FILENAME: path/to/file.ext
+FILENAME: file.ext
 CHANGES: [describe what you're changing]
 CONTENT:
 ```
@@ -52,7 +63,7 @@ Always use this exact format when working with files."""
 When you need to generate images, use this format:
 
 IMAGE_ACTION: GENERATE
-FILENAME: path/to/image.png
+FILENAME: images/image.png
 PROMPT: [detailed description of the image you want to generate]
 STYLE: [optional style guidance like "photorealistic", "illustration", "minimalist", etc.]
 
@@ -96,7 +107,7 @@ Always be very descriptive in your prompts for better image generation."""
                         }
                     ],
                     "temperature": 0.7,
-                    "max_tokens": 8192,
+                    "max_tokens": 4096,
                     "stream": False,
                 },
                 timeout=60,
@@ -107,6 +118,10 @@ Always be very descriptive in your prompts for better image generation."""
                 message_content = response_data["choices"][0]["message"][
                     "content"
                 ]
+                # Filter out thinking sections
+                message_content = self._filter_thinking_sections(
+                    message_content
+                )
             else:
                 print(f"LMStudio API error: {response.status_code}")
                 message_content = f"Error: Failed to get response from LMStudio (status: {response.status_code})"
@@ -131,3 +146,12 @@ Always be very descriptive in your prompts for better image generation."""
             or trigger in context.get("last_message", "")
             for trigger in self.activation_triggers
         )
+
+    def reset_messages(self):
+        """Reset agent messages to only the initial system prompt"""
+        self.messages = [
+            {
+                "role": "user",
+                "content": f"Your name is {self.name} and your personality is {self.personality}. {self.get_file_instructions()}",
+            }
+        ]
