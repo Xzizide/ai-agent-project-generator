@@ -1,17 +1,21 @@
 import os
-import subprocess
 from pathlib import Path
 from image_generator import ImageGenerator
 
 
 class FileManager:
-    def __init__(self, project_dir="website_project"):
-        self.project_dir = Path(project_dir)
+    def __init__(self, project_name):
+        # Create the main website_project directory
+        main_project_dir = Path("website_project")
+        main_project_dir.mkdir(exist_ok=True)
+
+        # Create a subdirectory for this specific project
+        self.project_dir = main_project_dir / project_name
         self.project_dir.mkdir(exist_ok=True)
         self.project_files = {}
         self.image_generator = ImageGenerator()
 
-        # Create images directory
+        # Create images directory within the project folder
         images_dir = self.project_dir / "images"
         images_dir.mkdir(exist_ok=True)
 
@@ -80,15 +84,7 @@ class FileManager:
                 current_filename = self._extract_value_after_colon(
                     clean_line
                 ).strip("\"'`")
-            elif "COMMAND:" in clean_line.upper():
-                command = self._extract_value_after_colon(clean_line).strip(
-                    "\"'`"
-                )
-                if current_action == "RUN":
-                    result = self.run_command(command)
-                    actions_performed.append(
-                        f"Ran command: {command}\nResult: {result}"
-                    )
+
             elif "CONTENT:" in clean_line.upper():
                 in_content = True
                 current_content = []
@@ -304,23 +300,6 @@ class FileManager:
                 return content
         return None
 
-    def run_command(self, command):
-        try:
-            # Change to project directory for commands
-            result = subprocess.run(
-                command,
-                shell=True,
-                cwd=self.project_dir,
-                capture_output=True,
-                text=True,
-                timeout=30,
-            )
-            return f"Exit code: {result.returncode}\nOutput: {result.stdout}\nError: {result.stderr}"
-        except subprocess.TimeoutExpired:
-            return "Command timed out"
-        except Exception as e:
-            return f"Error running command: {str(e)}"
-
     def get_project_structure(self):
         """Get a summary of all project files"""
         structure = {}
@@ -360,8 +339,6 @@ class FileManager:
                 detected_actions.append("STYLE")
             if "CONTENT:" in clean_line.upper():
                 detected_actions.append("CONTENT")
-            if "COMMAND:" in clean_line.upper():
-                detected_actions.append("COMMAND")
 
             if detected_actions or line.strip().startswith("```"):
                 print(

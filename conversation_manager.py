@@ -2,8 +2,9 @@ from file_manager import FileManager
 
 
 class ConversationManager:
-    def __init__(self, agents):
+    def __init__(self, agents, project_name):
         self.agents = agents
+        self.project_name = project_name
         self.conversation_history = []
         self.current_phase = "planning"
         self.project_context = {
@@ -12,7 +13,7 @@ class ConversationManager:
             "bugs_found": 0,
             "stuck_count": 0,
         }
-        self.file_manager = FileManager()
+        self.file_manager = FileManager(project_name)
 
     def determine_active_agents(self, context):
         """Determine which agents should participate based on context"""

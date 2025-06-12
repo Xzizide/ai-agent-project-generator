@@ -3,7 +3,8 @@ from conversation_manager import ConversationManager
 
 
 class DevelopmentSimulation:
-    def __init__(self):
+    def __init__(self, project_name):
+        self.project_name = project_name
         self.developer = Agent(
             "Developer",
             "You develop a website for a company. When you need to create or modify files, use the FILE_ACTION format exactly as instructed. Create actual HTML, CSS, and JavaScript files that work together to build the website.",
@@ -71,9 +72,12 @@ class DevelopmentSimulation:
             self.qa,
             self.manager,
         ]
-        self.conversation_manager = ConversationManager(self.agents)
+        self.conversation_manager = ConversationManager(
+            self.agents, project_name
+        )
 
     def first_runthrough(self, prompt):
+        print(f"=== STARTING PROJECT: {self.project_name} ===")
         print("=== SCENARIO 1: Client wants to discuss requirements ===")
         self.conversation_manager.run_conversation_round(prompt)
 

@@ -11,18 +11,23 @@ def show_menu():
 
 
 def main():
-    office = DevelopmentSimulation()
-
     while True:
         show_menu()
         choice = input("Enter your choice (1-2): ").strip()
 
         if choice == "1":
-            prompt = input("\nEnter your project request: ")
-            if prompt.strip():
-                office.first_runthrough(prompt)
-            else:
+            project_name = input("\nEnter your project name: ").strip()
+            if not project_name:
+                print("❌ Please enter a valid project name.")
+                continue
+
+            prompt = input("Enter your project request: ").strip()
+            if not prompt:
                 print("❌ Please enter a valid project request.")
+                continue
+
+            office = DevelopmentSimulation(project_name)
+            office.first_runthrough(prompt)
 
         elif choice == "2":
             print("👋 Goodbye!")

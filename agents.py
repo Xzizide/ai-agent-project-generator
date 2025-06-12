@@ -44,9 +44,6 @@ CONTENT:
 [new file content here]
 ```
 
-FILE_ACTION: RUN
-COMMAND: [command to run]
-
 Always use this exact format when working with files."""
 
         if self.can_generate_images:
