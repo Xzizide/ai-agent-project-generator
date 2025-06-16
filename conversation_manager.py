@@ -1,4 +1,6 @@
 from file_manager import FileManager
+import os
+from pathlib import Path
 
 
 class ConversationManager:
@@ -14,6 +16,94 @@ class ConversationManager:
             "stuck_count": 0,
         }
         self.file_manager = FileManager(project_name)
+
+    def load_all_project_files(self):
+        """
+        Scan the entire project directory and load all files into project_files context.
+        This ensures agents have access to all existing files, not just those created through file actions.
+        """
+        project_dir = self.file_manager.project_dir
+
+        if not project_dir.exists():
+            print(f"📁 Project directory {project_dir} does not exist yet")
+            return
+
+        loaded_count = 0
+        skipped_count = 0
+
+        print(f"🔍 Scanning project directory: {project_dir}")
+
+        # Walk through all files in the project directory
+        for root, dirs, files in os.walk(project_dir):
+            # Skip hidden directories and common build/cache directories
+            dirs[:] = [
+                d
+                for d in dirs
+                if not d.startswith(".")
+                and d not in ["__pycache__", "node_modules", ".git"]
+            ]
+
+            for file in files:
+                # Skip hidden files and common non-text files
+                if file.startswith(".") or file.endswith(
+                    (".pyc", ".png", ".jpg", ".jpeg", ".gif", ".ico", ".svg")
+                ):
+                    skipped_count += 1
+                    continue
+
+                file_path = Path(root) / file
+                # Get relative path from project directory
+                relative_path = file_path.relative_to(project_dir)
+                relative_path_str = str(relative_path).replace(
+                    "\\", "/"
+                )  # Normalize path separators
+
+                try:
+                    # Try to read the file as text
+                    with open(file_path, "r", encoding="utf-8") as f:
+                        content = f.read()
+
+                    # Add to project files context
+                    self.file_manager.project_files[relative_path_str] = (
+                        content
+                    )
+                    loaded_count += 1
+                    print(
+                        f"  📄 Loaded: {relative_path_str} ({len(content)} characters)"
+                    )
+
+                except UnicodeDecodeError:
+                    # Binary file, mark as such but don't load content
+                    self.file_manager.project_files[relative_path_str] = (
+                        "binary_file"
+                    )
+                    loaded_count += 1
+                    print(f"  🔧 Binary file: {relative_path_str}")
+                except Exception as e:
+                    print(f"  ❌ Error loading {relative_path_str}: {str(e)}")
+                    skipped_count += 1
+
+        print(f"✅ Loaded {loaded_count} files, skipped {skipped_count} files")
+        return loaded_count
+
+    def refresh_project_context(self):
+        """
+        Refresh the project context by reloading all files from the directory.
+        Useful when files might have been changed outside of the agent system.
+        """
+        print("🔄 Refreshing project context...")
+        # Clear existing context except for files marked as binary or image
+        text_files = {
+            k: v
+            for k, v in self.file_manager.project_files.items()
+            if isinstance(v, str) and v not in ["binary_file", "image_file"]
+        }
+
+        # Clear all and reload
+        self.file_manager.project_files.clear()
+
+        # Reload from directory
+        return self.load_all_project_files()
 
     def determine_active_agents(self, context):
         """Determine which agents should participate based on context"""
@@ -36,6 +126,9 @@ class ConversationManager:
     ):
         """Run one round of conversation with relevant agents"""
 
+        # Load all existing project files into context
+        self.load_all_project_files()
+
         # Determine context from the prompt
         context = self.analyze_context(initial_prompt)
         active_agents = self.determine_active_agents(context)
@@ -57,17 +150,38 @@ class ConversationManager:
 
                 # Debug action detection if requested
                 if debug and (
-                    agent.can_write_files or agent.can_generate_images
+                    agent.can_write_files
+                    or agent.can_read_files
+                    or agent.can_generate_images
                 ):
                     self.file_manager.debug_action_detection(response)
 
                 # Process any file operations
-                if agent.can_write_files or agent.can_generate_images:
+                if (
+                    agent.can_write_files
+                    or agent.can_read_files
+                    or agent.can_generate_images
+                ):
                     actions = self.file_manager.process_agent_response(
                         response
                     )
                     for action in actions:
-                        print(f"🔧 {action}")
+                        if (
+                            isinstance(action, dict)
+                            and action.get("type") == "read"
+                        ):
+                            # Add read file content to agent's conversation history
+                            file_content_message = f"File content of {action['filename']}:\n\n```\n{action['content']}\n```"
+                            agent.update_messages(
+                                "system", file_content_message
+                            )
+                            print(
+                                f"🔧 {action['message']} (content added to conversation)"
+                            )
+                        elif isinstance(action, dict):
+                            print(f"🔧 {action['message']}")
+                        else:
+                            print(f"🔧 {action}")
 
                 # Update context based on response
                 self.update_context_from_response(agent.name, response)
@@ -180,6 +294,18 @@ class ConversationManager:
         structure = self.file_manager.get_project_structure()
         for file_path, size in structure.items():
             print(f"📄 {file_path} ({size} bytes)")
+        print("=" * 23)
+
+        # Also show what's currently in the project_files context
+        print(f"\n📋 Files in context: {len(self.file_manager.project_files)}")
+        for file_path, content in self.file_manager.project_files.items():
+            if isinstance(content, str) and content not in [
+                "binary_file",
+                "image_file",
+            ]:
+                print(f"  📄 {file_path}: {len(content)} characters")
+            else:
+                print(f"  🔧 {file_path}: {content}")
         print("=" * 23)
 
     def reset_all_agents(self):

@@ -18,9 +18,10 @@ def show_project_menu(project_name):
     print(f"📁 PROJECT: {project_name}")
     print("=" * 50)
     print("0. Exit")
-    print("1. Continue development")
-    print("2. Add new page")
-    print("3. Improve existing page")
+    print("1. Add new page")
+    print("2. Improve existing page")
+    print("3. Add images to website")
+    print("4. Add custom feature")
     print("=" * 50)
 
 
@@ -88,21 +89,12 @@ def handle_existing_project(project_name):
     """Handle actions for existing project"""
     while True:
         show_project_menu(project_name)
-        choice = input("Enter your choice (0-3): ").strip()
+        choice = input("Enter your choice (0-4): ").strip()
 
         if choice == "0":
             break
 
         elif choice == "1":
-            prompt = input("\nEnter your development request: ").strip()
-            if not prompt:
-                print("❌ Please enter a valid request.")
-                continue
-
-            office = DevelopmentSimulation(project_name)
-            office.project_creation(prompt)
-
-        elif choice == "2":
             page_request = input(
                 "\nEnter your new page request (what page to add): "
             ).strip()
@@ -113,7 +105,7 @@ def handle_existing_project(project_name):
             office = DevelopmentSimulation(project_name)
             office.add_new_page(page_request)
 
-        elif choice == "3":
+        elif choice == "2":
             improvement_request = input(
                 "\nEnter your page improvement request (which page to improve and how): "
             ).strip()
@@ -124,8 +116,30 @@ def handle_existing_project(project_name):
             office = DevelopmentSimulation(project_name)
             office.improve_existing_page(improvement_request)
 
+        elif choice == "3":
+            image_request = input(
+                "\nEnter your image request (what images to create and where to use them): "
+            ).strip()
+            if not image_request:
+                print("❌ Please enter a valid image request.")
+                continue
+
+            office = DevelopmentSimulation(project_name)
+            office.add_images_to_website(image_request)
+
+        elif choice == "4":
+            feature_request = input(
+                "\nEnter your custom feature request (what functionality to add): "
+            ).strip()
+            if not feature_request:
+                print("❌ Please enter a valid feature request.")
+                continue
+
+            office = DevelopmentSimulation(project_name)
+            office.add_custom_feature(feature_request)
+
         else:
-            print("❌ Invalid choice. Please enter 0, 1, 2, or 3.")
+            print("❌ Invalid choice. Please enter 0, 1, 2, 3, or 4.")
 
 
 def main():

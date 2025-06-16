@@ -85,6 +85,36 @@ class FileManager:
                     clean_line
                 ).strip("\"'`")
 
+                # Handle READ action immediately when filename is provided
+                if current_action == "READ" and current_filename:
+                    content = self.read_file(current_filename)
+                    if content is not None:
+                        print(f"📖 Reading file: {current_filename}")
+                        print("=" * 50)
+                        print(content)
+                        print("=" * 50)
+                        # Return the read content as part of the action result
+                        actions_performed.append(
+                            {
+                                "type": "read",
+                                "filename": current_filename,
+                                "content": content,
+                                "message": f"Read file: {current_filename}",
+                            }
+                        )
+                    else:
+                        print(f"❌ File not found: {current_filename}")
+                        actions_performed.append(
+                            {
+                                "type": "read_error",
+                                "filename": current_filename,
+                                "message": f"File not found: {current_filename}",
+                            }
+                        )
+                    # Reset action state
+                    current_action = None
+                    current_filename = None
+
             elif "CONTENT:" in clean_line.upper():
                 in_content = True
                 current_content = []
